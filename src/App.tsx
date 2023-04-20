@@ -8,6 +8,7 @@ import { setHistory } from './app/slice/historyReducer';
 function App() {
   const [searchText, setSearchText] = useState<string>("");
   const {pokemons, searchedResult} = useSelector((state: RootState) => state.pokemon);
+  const {value} = useSelector((state: RootState) => state.history);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -18,13 +19,27 @@ function App() {
       const pokemon = await Promise.all(detailResponse.map(item => item.json()));
       dispatch(setPokemon(pokemon));
     }
+    console.log(value);
     fetchData();
   }, [])
 
-  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-    const newSearchedResult = pokemons.filter((pokemon: any) => pokemon.name.toLowerCase().includes(e.currentTarget.value.toLowerCase()));
-    setSearchText(e.currentTarget.value);
+  const debounce = (fn: Function, ms = 300) => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+    return function (this: any, ...args: any[]) {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => fn.apply(this, args), ms);
+    };
+  };
+
+  const searchPokemon: Function = (searchString: string) => {
+    const newSearchedResult = pokemons.filter((pokemon: any) => pokemon.name.toLowerCase().includes(searchString.toLowerCase()));
+    setSearchText(searchString);
     dispatch(setSearchedResult(newSearchedResult));
+    searchString !== "" && dispatch(setHistory({key: searchText, value: newSearchedResult, date: new Date().toISOString()}));
+  }
+
+  const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+    debounce(searchPokemon(e.currentTarget.value));
   }
 
   const handleClick = () => {
