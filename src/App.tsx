@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from './app/store';
 import { setPokemon, setSearchedResult } from './app/slice/pokemonReducer';
 import { setHistory } from './app/slice/historyReducer';
+import { Card } from './Components/Card';
 
 function App() {
   const [searchText, setSearchText] = useState<string>("");
@@ -42,18 +43,14 @@ function App() {
     debounce(searchPokemon(e.currentTarget.value));
   }
 
-  const handleClick = () => {
-    const newSearchedResult = pokemons.filter((pokemon: any) => pokemon.name.toLowerCase().includes(searchText.toLowerCase()));
-    dispatch(setSearchedResult(newSearchedResult));
-    dispatch(setHistory({key: searchText, value: newSearchedResult, date: new Date().toISOString()}));
-  }
   return (
     <div className="App">
       <input onChange={handleChange} value={searchText}/>
-      <button onClick={handleClick}>Search</button>
-      {
-        searchedResult.map((pokemon: any) => <div>{pokemon.name}</div>)
-      }
+      <div className='card__container__list'>
+        {
+          searchedResult.map((pokemon: any) => <Card data={pokemon} />)
+        }
+      </div>
     </div>
   );
 }
