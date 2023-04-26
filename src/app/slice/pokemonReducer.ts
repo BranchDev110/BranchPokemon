@@ -1,12 +1,19 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+
+type PokemonState = {
+  pokemons: any[],
+  searchedResult: any[]
+}
+
+const initialState: PokemonState = {pokemons: [], searchedResult: []};
 
 const pokemonSlice = createSlice({
   name: 'pokemon',
-  initialState: {pokemons: [], searchedResult: []},
+  initialState,
   reducers: {
-    setPokemon: (state, action) => {
-        state = {...state, pokemons: action.payload, searchedResult: action.payload};
-        return state;
+    setPokemon: (state: PokemonState, action: PayloadAction<any[]>) => {
+        const newState = {...state, pokemons: action.payload, searchedResult: [...state.searchedResult, ...action.payload]};
+        return newState;
     },
     setSearchedResult: (state, action) => {
         state = {...state, searchedResult: action.payload};

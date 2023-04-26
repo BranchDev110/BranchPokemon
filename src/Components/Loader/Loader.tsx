@@ -6,7 +6,7 @@ const rotationAnimation = keyframes`
 `
 
 const LoadingContainer = styled.div`
-    position: absolute;
+    position: relative;
     display: flex;
     width: 100%;
     height: 100%;
@@ -14,7 +14,7 @@ const LoadingContainer = styled.div`
     align-items: center;
     left: 0;
     top: 0;
-    background-color: rgba(0,0,0,0.9);
+    background-color: rgba(0,0,0,0.5);
 `
 
 const LoadingComponent = styled.div`

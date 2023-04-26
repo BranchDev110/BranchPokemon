@@ -21,8 +21,6 @@ export const CardContainer = styled.div<CardContainerProps>`
     align-items: center;
     background-color: rgba(30,30,30,0.9);
     box-shadow: 0 0 30px rgba(250,250,250,0.2);
-    width: 30%;
-    flex: 1;
     margin: 30px 20px;
     padding: 36px;
     border-radius: 15px;
