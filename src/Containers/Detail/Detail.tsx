@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Loader } from "../../Components/Loader";
 import colours, { IColorTypes } from "../../constant/color";
+import { EvolutionChain } from "../../Components/EvolutionChain";
 
 interface DetailsInfoProps {
   type: keyof IColorTypes;
@@ -43,6 +44,25 @@ const DetailsInfo = styled.div`
   }
 `;
 
+const DetailsSecInfo = styled.div`
+  color: white;
+  width: 300px;
+  position: absolute;
+  right: 0;
+  bottom: 50px;
+  background-color: rgba(100, 100, 100, 0.3);
+  padding: 15px;
+  &: after {
+    position: absolute;
+    content: "";
+    right: 15px;
+    top: 0;
+    width: 50px;
+    height: 5px;
+    background-color: ${({ type }: DetailsInfoProps) => colours[type]};
+  }
+`
+
 const DetailsName = styled.p`
   font-size: 24px;
   letter-spacing: 2px;
@@ -52,6 +72,26 @@ const DetailsName = styled.p`
 const DetailsType = styled.p`
   letter-spacing: 1.2px;
 `;
+
+const DetailsInfoText = styled.div`
+  display: flex;
+  margin: 5px 0;
+`
+
+const DetailsInfoLabel = styled.p`
+  flex: 1;
+  text-align: right;
+  letter-spacing: 1.2px;
+  font-size: 14px;
+`
+
+const DetailsInfoContent = styled.p`
+  flex: 2;
+  text-align: left;
+  padding: 0 5px;
+  letter-spacing: 1.2px;
+  font-size: 14px;
+`
 
 const DetailsSkill = styled.div`
   position: relative;
@@ -135,20 +175,42 @@ const Detail = () => {
   const { name } = useParams();
 	const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any>(null);
+  const [evolution, setEvolution] = useState<any []>([]);
+  const [isImageLoad, setIsImageLoad] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
 			setIsLoading(true);
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       const result = await response.json();
       setData(result);
+      const speciesResponse = await fetch(`https://pokeapi.co/api/v2/pokemon-species/${name}`);
+      const speciesResult = await speciesResponse.json();
+      const evolutionResponse = await fetch(speciesResult["evolution_chain"]["url"]);
+      const evolutionResult = await evolutionResponse.json();
+      setEvolution(constructEvolutionData(evolutionResult["chain"], []));
+      console.log(constructEvolutionData(evolutionResult["chain"], []));
 			setIsLoading(false);
     };
     fetchData();
-  }, []);
+  }, [name]);
+
+  const constructEvolutionData = (evolutionChain: any, name: any) => {
+    name.push({id: evolutionChain.species.url.split("/").at(-2), name: evolutionChain.species.name, level: name.length});
+    if(evolutionChain["evolves_to"].length > 0) {
+      evolutionChain["evolves_to"].forEach((item: any) => constructEvolutionData(item, name))
+    }
+    return name;
+  }
+
+  const handleOnLoad = () => {
+    setIsImageLoad(true);
+  }
+
   return (
     <DetailsContainer>
       <DetailsImageContainer data={data?.id} type={data?.types[0].type.name}>
-        <DetailsImage src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data?.id}.png`}/>
+        <DetailsImage src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data?.id}.png`} onLoad={handleOnLoad}/>
       </DetailsImageContainer>
       <DetailsInfo type={data?.types[0].type.name}>
         <DetailsName>{data?.name?.toUpperCase()}</DetailsName>
@@ -174,6 +236,17 @@ const Detail = () => {
           </DetailsSkillItem>
         ))}
       </DetailsSkill>
+      <DetailsSecInfo type={data?.types[0].type.name}>
+        <DetailsInfoText>
+          <DetailsInfoLabel>WEIGHT : </DetailsInfoLabel>
+          <DetailsInfoContent>{data?.weight}</DetailsInfoContent>
+        </DetailsInfoText>
+        <DetailsInfoText>
+          <DetailsInfoLabel>HEIGHT : </DetailsInfoLabel>
+          <DetailsInfoContent>{data?.height}</DetailsInfoContent>
+        </DetailsInfoText>
+      </DetailsSecInfo>
+      <EvolutionChain evolution={evolution} type={data?.types[0].type.name}/>
 			{
 				isLoading && <Loader />
 			}

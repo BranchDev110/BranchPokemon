@@ -26,6 +26,7 @@
 }
 
 .card__container__list{
+  position: relative;
   flex: 1;
   display: flex;
   flex-wrap: wrap;

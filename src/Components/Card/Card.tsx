@@ -1,8 +1,9 @@
-import React from 'react';
 import styled from "styled-components";
 import colours from '../../constant/color';
 import type {IColorTypes} from '../../constant/color';
 import { Link } from 'react-router-dom';
+import { useState } from "react";
+import { Loader } from "../Loader";
 
 interface CardContainerProps {
     type: keyof IColorTypes;
@@ -58,6 +59,7 @@ const CardName = styled.div`
 `
 
 const CardImg = styled.div<CardContainerProps>`
+    position: relative;
     width: 210px;
     height: 210px;
     border-radius: 50%;
@@ -83,12 +85,19 @@ const CardBadge = styled.span<CardBadgeProps>`
 `
 
 const Card = ({data}: any) => {
+    const [isLoad, setIsLoad] = useState(false);
+    const handleOnLoad = () => {
+        setIsLoad(true);
+    }
     return (
         <CardContainer type={data.types[0].type.name}>
             <Link to={`/details/${data.id}`}>
                 <CardBody>
                     <CardImg type={data.types[0].type.name}>
-                        <img src={`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${data.id.toString().padStart(3, '0')}.png`}/>
+                        {
+                            !isLoad && <Loader />
+                        }
+                        <img src={`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${data.id.toString().padStart(3, '0')}.png`} onLoad={handleOnLoad}/>
                     </CardImg>
                 </CardBody>
                 <CardFooter>

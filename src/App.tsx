@@ -5,6 +5,7 @@ import { RSidebar } from './Containers/RSidebar';
 import { Home } from './Containers/Home';
 import { Route, Routes } from 'react-router-dom';
 import { Detail } from './Containers/Detail';
+import { History } from './Containers/History';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />}/>
+          <Route path="/history" element={<History />}/>
           <Route path="/details/:name" element={<Detail />}/>
         </Routes>
       </div>

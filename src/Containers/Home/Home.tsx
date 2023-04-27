@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
-import { setPokemon, setSearchedResult } from "../../app/slice/pokemonReducer";
+import { addPage, setPokemon, setSearchedResult, setSearchText } from "../../app/slice/pokemonReducer";
 import { setHistory } from "../../app/slice/historyReducer";
 import styled from "styled-components";
 import { InfiniteScroll } from "../../Components/InfinteScroll";
 
 const SearchInput = styled.input`
-  padding: 8px 15px;
+  padding: 18px 15px;
   background: none;
   outline: none;
   border: 1px solid #666;
@@ -20,13 +20,10 @@ const SearchInput = styled.input`
 `;
 
 const Home = () => {
-  const [searchText, setSearchText] = useState<string>("");
-  const { pokemons, searchedResult } = useSelector(
+  const { pokemons, searchedResult, page, searchText } = useSelector(
     (state: RootState) => state.pokemon
-  );
-  const { value } = useSelector((state: RootState) => state.history);
+  );  
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(0);
   const dispatch = useDispatch();
 
   const fetchData = async (page: number) => {
@@ -45,12 +42,18 @@ const Home = () => {
     setIsLoading(false);
   };
 
+
   useEffect(() => {
-    fetchData(page);
-  }, [page]);
+    if(page === -1){
+      callbackAction();
+    }
+  }, []);
 
   const callbackAction = () => {
-    setPage(page + 1);
+    if(searchText === "") {
+      fetchData(page + 1);
+      dispatch(addPage(page + 1));
+    }
   }
 
   const debounce = (fn: Function, ms = 300) => {
@@ -65,12 +68,12 @@ const Home = () => {
     const newSearchedResult = pokemons.filter((pokemon: any) =>
       pokemon.name.toLowerCase().includes(searchString.toLowerCase())
     );
-    setSearchText(searchString);
+    dispatch(setSearchText(searchString));
     dispatch(setSearchedResult(newSearchedResult));
     searchString !== "" &&
       dispatch(
         setHistory({
-          key: searchText,
+          key: searchString,
           value: newSearchedResult,
           date: new Date().toISOString(),
         })
