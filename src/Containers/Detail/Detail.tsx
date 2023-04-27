@@ -137,8 +137,8 @@ const DetailsImageContainer = styled.div<DetailsContainerProps>`
 	z-index: 2;
   position: absolute;
   left: 50%;
-  top: 30%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 0);
+  background: none;
   &: before {
     position: absolute;
 		z-index: 2;
@@ -152,6 +152,7 @@ const DetailsImageContainer = styled.div<DetailsContainerProps>`
     width: 500px;
     height: 500px;
     content: "";
+    background: none;
   }
   &: after {
     position: absolute;
@@ -163,6 +164,7 @@ const DetailsImageContainer = styled.div<DetailsContainerProps>`
     border-top: 5px solid ${({ type }: DetailsInfoProps) => colours[type]};
     border-bottom: 5px solid ${({ type }: DetailsInfoProps) => colours[type]};
     transform: translate(-50%, 50px) rotate(-45deg) skew(-60deg);
+    background: none;
   }
 `;
 
@@ -176,9 +178,15 @@ const Detail = () => {
 	const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState<any>(null);
   const [evolution, setEvolution] = useState<any []>([]);
-  const [isImageLoad, setIsImageLoad] = useState(false);
 
   useEffect(() => {
+    const constructEvolutionData = (evolutionChain: any, name: any) => {
+      name.push({id: evolutionChain.species.url.split("/").at(-2), name: evolutionChain.species.name, level: name.length});
+      if(evolutionChain["evolves_to"].length > 0) {
+        evolutionChain["evolves_to"].forEach((item: any) => constructEvolutionData(item, name))
+      }
+      return name;
+    }
     const fetchData = async () => {
 			setIsLoading(true);
       const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
@@ -189,28 +197,15 @@ const Detail = () => {
       const evolutionResponse = await fetch(speciesResult["evolution_chain"]["url"]);
       const evolutionResult = await evolutionResponse.json();
       setEvolution(constructEvolutionData(evolutionResult["chain"], []));
-      console.log(constructEvolutionData(evolutionResult["chain"], []));
 			setIsLoading(false);
     };
     fetchData();
   }, [name]);
 
-  const constructEvolutionData = (evolutionChain: any, name: any) => {
-    name.push({id: evolutionChain.species.url.split("/").at(-2), name: evolutionChain.species.name, level: name.length});
-    if(evolutionChain["evolves_to"].length > 0) {
-      evolutionChain["evolves_to"].forEach((item: any) => constructEvolutionData(item, name))
-    }
-    return name;
-  }
-
-  const handleOnLoad = () => {
-    setIsImageLoad(true);
-  }
-
   return (
     <DetailsContainer>
       <DetailsImageContainer data={data?.id} type={data?.types[0].type.name}>
-        <DetailsImage src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data?.id}.png`} onLoad={handleOnLoad}/>
+        <DetailsImage src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/home/${data?.id}.png`}/>
       </DetailsImageContainer>
       <DetailsInfo type={data?.types[0].type.name}>
         <DetailsName>{data?.name?.toUpperCase()}</DetailsName>
@@ -222,8 +217,8 @@ const Detail = () => {
         </DetailsType>
       </DetailsInfo>
       <DetailsSkill>
-        {data?.stats.map((item: any) => (
-          <DetailsSkillItem>
+        {data?.stats.map((item: any, index: number) => (
+          <DetailsSkillItem key={`skill-${index}`}>
             <DetailsSkillItemText>
               {item.stat.name.toUpperCase()} :
             </DetailsSkillItemText>

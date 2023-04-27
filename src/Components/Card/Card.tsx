@@ -97,7 +97,7 @@ const Card = ({data}: any) => {
                         {
                             !isLoad && <Loader />
                         }
-                        <img src={`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${data.id.toString().padStart(3, '0')}.png`} onLoad={handleOnLoad}/>
+                        <img src={`https://assets.pokemon.com/assets/cms2/img/pokedex/detail/${data.id.toString().padStart(3, '0')}.png`} onLoad={handleOnLoad} alt={data.name}/>
                     </CardImg>
                 </CardBody>
                 <CardFooter>

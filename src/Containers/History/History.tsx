@@ -63,7 +63,7 @@ const History = () => {
                     </thead>
                     <tbody>
                         {
-                            value.map(item => <TR onClick={() => setCurrentHistory(item.value)}>
+                            value.map((item, index) => <TR onClick={() => setCurrentHistory(item.value)} key={`history-${index}`}>
                                 <TD>{item.key}</TD>
                                 <TD>{item.value.map(it => it.name.toUpperCase()).join(', ')}</TD>
                                 <TD>{item.value.length}</TD>
@@ -75,7 +75,7 @@ const History = () => {
             </HistoryList>
             <HistoryViewer>
                 {
-                    currentHistory.map(item => <Card data={item} key={item.id}/>)
+                    currentHistory.map(item => <Card data={item} key={`history-item-${item.id}`}/>)
                 }
             </HistoryViewer>
         </HistoryContainer>
