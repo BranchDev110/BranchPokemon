@@ -8,14 +8,14 @@ import { InfiniteScroll } from "../../Components/InfinteScroll";
 import { Loader } from "../../Components/Loader";
 
 const SearchInput = styled.input`
-  padding: 18px 15px;
+  padding: 18px 24px;
   background: none;
   outline: none;
   border: 1px solid #666;
   color: white;
   font-size: 14px;
   width: 400px;
-  border-radius: 1rem;
+  border-radius: 2rem;
   margin: 30px 0;
   height: 30px;
 `;
@@ -83,7 +83,7 @@ const Home = () => {
       dispatch(
         setHistory({
           key: searchString,
-          value: newSearchedResult,
+          value: newSearchedResult.map(item => ({"name": item.name, "id": item.id, "types": item.types})),
           date: new Date().toISOString(),
         })
       );
