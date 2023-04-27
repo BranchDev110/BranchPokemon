@@ -1,6 +1,16 @@
 import { useRef } from "react";
+import styled from 'styled-components';
 import { Card } from "../Card";
 import { VirtualScrollChild } from "../VirtualScrollChild";
+
+const CardContainerList = styled.div`
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  overflow-y: scroll;
+`
 
 const InfiniteScroll = ({ listItems, callbackAction }: any) => {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -13,7 +23,7 @@ const InfiniteScroll = ({ listItems, callbackAction }: any) => {
     }
   }
   return (
-    <div className="card__container__list" onScroll={handleScroll} ref={containerRef}>
+    <CardContainerList onScroll={handleScroll} ref={containerRef}>
       {listItems.map((item: any, index: number) => {
         const props: any = { key: `card-${index}` };
         return (
@@ -22,7 +32,7 @@ const InfiniteScroll = ({ listItems, callbackAction }: any) => {
           </VirtualScrollChild>
         );
       })}
-    </div>
+    </CardContainerList>
   );
 };
 

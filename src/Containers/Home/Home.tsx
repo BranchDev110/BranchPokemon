@@ -20,6 +20,15 @@ const SearchInput = styled.input`
   height: 30px;
 `;
 
+const HomeContainer = styled.div`
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  width: 90%;
+  height: 500px;
+`
+
 const Home = () => {
   const { pokemons, searchedResult, page, searchText } = useSelector(
     (state: RootState) => state.pokemon
@@ -84,11 +93,11 @@ const Home = () => {
     debounce(searchPokemon(e.currentTarget.value));
   };
   return (
-    <div className="card__container">
+    <HomeContainer>
       <SearchInput onChange={handleChange} value={searchText} />
       <InfiniteScroll listItems={searchedResult} callbackAction={callbackAction} isLoading={isLoading}/>
       {isLoading && <Loader />}
-    </div>
+    </HomeContainer>
   );
 };
 

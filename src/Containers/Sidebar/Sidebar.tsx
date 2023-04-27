@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 const SidebarContainer = styled.div`
@@ -22,7 +23,9 @@ const Sidebar = () => {
     return (
         <SidebarContainer>
             <PokemonLogoContainer>
-                <PokemonLogo src='./pokeball-white.png'/>
+                <Link to="/">
+                    <PokemonLogo src='./pokeball-white.png'/>
+                </Link>
             </PokemonLogoContainer>
         </SidebarContainer>
     )
