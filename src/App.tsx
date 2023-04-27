@@ -6,6 +6,7 @@ import { Home } from './Containers/Home';
 import { Route, Routes } from 'react-router-dom';
 import { Detail } from './Containers/Detail';
 import { History } from './Containers/History';
+import { About } from './Containers/About';
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/history" element={<History />}/>
+          <Route path="/about" element={<About />}/>
           <Route path="/details/:name" element={<Detail />}/>
         </Routes>
       </div>

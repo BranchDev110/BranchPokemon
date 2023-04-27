@@ -1,0 +1,6 @@
+{
+    "name": "Branch",
+    "year": "2023",
+    "stack": ["React", "TypeScript", "Redux-Toolkit", "Redux-Persist", "React-Router", "Styled components", "Intersepctor Observable", "Infinite Scrolling", "Virtual Scrolling"],
+    "Github": "https://github.com/BranchDev110/BranchPokemon"
+}
