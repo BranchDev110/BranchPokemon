@@ -136,7 +136,7 @@ const DetailsSkillProgressBar = styled.div<DetailsProgressBarProps>`
 const DetailsImageContainer = styled.div<DetailsContainerProps>`
 	z-index: 2;
   position: absolute;
-  left: 50%;
+  left: 70%;
   transform: translate(-50%, 0);
   background: none;
   &: before {
