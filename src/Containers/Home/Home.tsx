@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../app/store";
 import { addPage, setPokemon, setSearchedResult, setSearchText } from "../../app/slice/pokemonReducer";
 import { setHistory } from "../../app/slice/historyReducer";
 import styled from "styled-components";
 import { InfiniteScroll } from "../../Components/InfinteScroll";
+import { Loader } from "../../Components/Loader";
 
 const SearchInput = styled.input`
   padding: 18px 15px;
@@ -26,7 +27,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
 
-  const fetchData = async (page: number) => {
+  const fetchData = useCallback(async (page: number) => {
     setIsLoading(true);
     const response = await fetch(
       `https://pokeapi.co/api/v2/pokemon?limit=10&offset=${page * 10}`
@@ -40,21 +41,20 @@ const Home = () => {
     );
     dispatch(setPokemon(pokemon));
     setIsLoading(false);
-  };
+  }, [dispatch]);
 
+  const callbackAction = useCallback(() => {
+    if(searchText === "") {
+      fetchData(page + 1);
+      dispatch(addPage(page + 1));
+    }
+  }, [searchText, fetchData, dispatch, page]);
 
   useEffect(() => {
     if(page === -1){
       callbackAction();
     }
-  }, []);
-
-  const callbackAction = () => {
-    if(searchText === "") {
-      fetchData(page + 1);
-      dispatch(addPage(page + 1));
-    }
-  }
+  }, [page, callbackAction]);
 
   const debounce = (fn: Function, ms = 300) => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -87,6 +87,7 @@ const Home = () => {
     <div className="card__container">
       <SearchInput onChange={handleChange} value={searchText} />
       <InfiniteScroll listItems={searchedResult} callbackAction={callbackAction} isLoading={isLoading}/>
+      {isLoading && <Loader />}
     </div>
   );
 };

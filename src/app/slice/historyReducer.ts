@@ -15,6 +15,7 @@ const historySlice = createSlice({
   initialState: {value: []} as History,
   reducers: {
     setHistory: (state, action) => {
+      alert(action.payload);
         state = {value: [...state.value, action.payload]};
         return state;
     }

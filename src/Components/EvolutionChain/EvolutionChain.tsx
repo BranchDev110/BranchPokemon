@@ -10,7 +10,7 @@ interface ColorProps {
 
 const EvolutionChainContainer = styled.div<ColorProps>`
   position: absolute;
-  width: 600px;
+  min-width: 600px;
   left: 0;
   bottom: 20px;
   background-color: rgba(100, 100, 100, 0.3);
@@ -95,7 +95,7 @@ const EvolutionChain = ({ evolution, type }: any) => {
       <EvolutionChainTitle>Evolution List</EvolutionChainTitle>
       <EvolutionChainContent>
         {evolution.map((item: any) => (
-          <Link to={`/details/${item.id}`}>
+          <Link to={`/details/${item.id}`} key={`evolution-${item.id}`}>
             <EvolutionChainItem>
               <EvolutionImageItem type={type} id={item.id} />
               <EvolutionChainItemText>
