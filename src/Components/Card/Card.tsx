@@ -16,7 +16,7 @@ interface CardBadgeProps {
     }
 }
 
-export const CardContainer = styled.div<CardContainerProps>`
+const CardContainer = styled.div<CardContainerProps>`
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -33,16 +33,8 @@ export const CardContainer = styled.div<CardContainerProps>`
     }
 `
 
-export const CardBody = styled.div`
+const CardBody = styled.div`
     position: relative;
-`
-
-export const CardId = styled.div`
-    position: absolute;
-    left: 15px;
-    top: 5px;
-    font-size: 36px;
-    color: #9094C7;
 `
 
 const CardFooter = styled.div`
