@@ -34,6 +34,8 @@ const TH = styled.td`
 
 const HistoryList = styled.div`
     flex: 3;
+    height: 700px;
+    overflow-y: scroll;
 `
 
 const HistoryViewer = styled.div`
